@@ -65,11 +65,13 @@ def fetch_douban_read_books(user_id, read_existing_ids=None, douban_existing_ids
                         book_rating_obj = subject.get('rating', {})
                         book_rating_val = book_rating_obj.get('value', 0.0) if book_rating_obj else 0.0
                         book_rating_count = book_rating_obj.get('count', 0) if book_rating_obj else 0
+                        authors = subject.get('author', [])
+                        author = ', '.join(authors) if authors else ''
                         
                         try:
                             with open('data/douban.csv', 'a', encoding='utf-8', newline='') as f_csv:
                                 writer = csv.writer(f_csv)
-                                writer.writerow([book_id, book_rating_val, book_rating_count, title])
+                                writer.writerow([book_id, book_rating_val, book_rating_count, title, author])
                             douban_existing_ids.add(book_id)
                             print(f"  Appended new book {book_id} to douban.csv")
                         except Exception as e:
